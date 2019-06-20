@@ -7,7 +7,7 @@ require (
 	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf // indirect
 	github.com/asdine/storm v2.1.2+incompatible
 	github.com/astaxie/beego v1.11.1
-	github.com/blocktree/go-owcdrivers v1.0.23
+	github.com/blocktree/go-owcdrivers v1.0.24
 	github.com/blocktree/go-owcrypt v1.0.1
 	github.com/blocktree/openwallet v1.4.3
 	github.com/cweill/gotests v1.5.3 // indirect

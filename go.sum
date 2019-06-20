@@ -26,6 +26,15 @@ github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+Ce
 github.com/blocktree/ddmchain-adapter v1.0.5/go.mod h1:oqsMVtGaRVm0JIEld4Ge9vblhwjSuv4k73artQE+EO8=
 github.com/blocktree/eosio-adapter v1.0.0/go.mod h1:Ck5C4aIg+z9DbqjAngn6sVemI5GQF/6BPoxzvdE7pa8=
 github.com/blocktree/futurepia-adapter v1.0.9/go.mod h1:46VvLidqafh6kxLKBCFKeVlbVPmjTp0oOhyg9pGxhXM=
+github.com/blocktree/go-owcdrivers v1.0.4/go.mod h1:HS5S8MYW1hdN6hEmwgqu/kWyFPkxvjGN9Le0zAGmFZM=
+github.com/blocktree/go-owcdrivers v1.0.5/go.mod h1:HS5S8MYW1hdN6hEmwgqu/kWyFPkxvjGN9Le0zAGmFZM=
+github.com/blocktree/go-owcdrivers v1.0.12/go.mod h1:TKevypdvkQD4ItBGscwMJqWWMOhDo9vXwnV1wacNs9w=
+github.com/blocktree/go-owcdrivers v1.0.15/go.mod h1:8dHbObmem3ac25DCMxUTBpOgbLaddwv1I3OkO0hG7+8=
+github.com/blocktree/go-owcdrivers v1.0.21/go.mod h1:V+u/NTvUrjzxh5FhDW+B9d7+e4UzuGZfF9ImZerCCMA=
+github.com/blocktree/go-owcdrivers v1.0.23 h1:47ptNqyVfsspg8MngfJTqiOkQ7Fbuh/aHeYnvtzBmcU=
+github.com/blocktree/go-owcdrivers v1.0.23/go.mod h1:iyyJs7nj3LyRGjcoLnIpUK6238GIGLv9IB3uE6B0I4k=
+github.com/blocktree/go-owcdrivers v1.0.24 h1:sYscxoUL0R4VA5kSzs/DbJItPcGanvSw275Ej4eOFrI=
+github.com/blocktree/go-owcdrivers v1.0.24/go.mod h1:iyyJs7nj3LyRGjcoLnIpUK6238GIGLv9IB3uE6B0I4k=
 github.com/blocktree/go-owcrypt v1.0.1 h1:hTqRN7mH2L0mVzHcL9jE0YM7B4oUFiDvksLEpam7oU8=
 github.com/blocktree/go-owcrypt v1.0.1/go.mod h1:5FCinL/4XVEqbmAFTOUgfMJVNJEw6WzVy624qsxzZC8=
 github.com/blocktree/ontology-adapter v1.0.8/go.mod h1:NA7qQB0g/85ty9XGLt+I0YeuV7ErnWhTTXC1MH/jCS8=
@@ -58,6 +67,7 @@ github.com/couchbase/go-couchbase v0.0.0-20190401022532-e1757383bdca/go.mod h1:T
 github.com/couchbase/gomemcached v0.0.0-20181122193126-5125a94a666c/go.mod h1:srVSlQLB8iXBVXHgnqemxUXqN6FCvClgCMPCsjBDR7c=
 github.com/couchbase/goutils v0.0.0-20180530154633-e865a1461c8a/go.mod h1:BQwMFlJzDjFDG3DJUdU0KORxn88UlsOULuxLExMh3Hs=
 github.com/cupcake/rdb v0.0.0-20161107195141-43ba34106c76/go.mod h1:vYwsqCOLxGiisLwp9rITslkFNpZD5rz43tf41QFkTWY=
+github.com/cweill/gotests v1.5.3/go.mod h1:XZYOJkGVkCRoymaIzmp9Wyi3rUgfA3oOnkuljYrjFV8=
 github.com/davecgh/go-spew v0.0.0-20171005155431-ecdeabc65495/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -118,6 +128,7 @@ github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRW
 github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/ginkgo v1.7.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/gomega v1.4.3/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1CpauHY=
+github.com/ontio/ontology v1.6.2/go.mod h1:1Tw+XYq8tDX9hqJ1qB51FCzVqntTQipyOL+ibKbaFSg=
 github.com/opencontainers/go-digest v1.0.0-rc1/go.mod h1:cMLVZDEM3+U2I4VmLI6N8jQYUd2OVphdqWwCJHrFt2s=
 github.com/opencontainers/image-spec v1.0.1/go.mod h1:BtxoFyWECRxE4U/7sNtV5W15zMzWCbyJoFRP3s7yZA0=
 github.com/pborman/uuid v1.2.0 h1:J7Q5mO4ysT1dv8hyrUGHb9+ooztCXu1D8MY8DZYsu3g=
