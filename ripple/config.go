@@ -97,6 +97,8 @@ type WalletConfig struct {
 	IgnoreReserve bool
 	// last ledger sequence number
 	LastLedgerSequenceNumber int64
+	// data directory
+	DataDir string
 }
 
 func NewConfig(symbol string, masterKey string) *WalletConfig {
@@ -188,9 +190,9 @@ walletPassword = ""
 `
 
 	//创建目录
-	file.MkdirAll(c.dbPath)
-	file.MkdirAll(c.backupDir)
-	file.MkdirAll(c.keyDir)
+	// file.MkdirAll(c.dbPath)
+	// file.MkdirAll(c.backupDir)
+	// file.MkdirAll(c.keyDir)
 
 	return &c
 }
@@ -226,6 +228,21 @@ func (wc *WalletConfig) PrintConfig() error {
 
 	return nil
 
+}
+
+//创建文件夹
+func (wc *WalletConfig) makeDataDir() {
+
+	if len(wc.DataDir) == 0 {
+		//默认路径当前文件夹./data
+		wc.DataDir = "data"
+	}
+
+	//本地数据库文件路径
+	wc.dbPath = filepath.Join(wc.DataDir, strings.ToLower(wc.Symbol), "db")
+
+	//创建目录
+	file.MkdirAll(wc.dbPath)
 }
 
 //initConfig 初始化配置文件

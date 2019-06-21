@@ -22,7 +22,8 @@ fixedFee = 10000
 registerFee = 10000
 # min transfer amount in sawi
 minTransferAmount = 10000
-
+# Cache data file directory, default = "", current directory: ./data
+dataDir = ""
 ```
 
 # 账户激活

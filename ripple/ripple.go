@@ -132,6 +132,11 @@ func (wm *WalletManager) LoadAssetsConfig(c config.Configer) error {
 	wm.Config.ReserveAmount, _ = c.Int64("reserveAmount")
 	wm.Config.IgnoreReserve, _ = c.Bool("ignoreReserve")
 	wm.Config.LastLedgerSequenceNumber, _ = c.Int64("lastLedgerSequenceNumber")
+	wm.Config.DataDir = c.String("dataDir")
+
+	//数据文件夹
+	wm.Config.makeDataDir()
+
 	return nil
 }
 
