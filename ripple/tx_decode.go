@@ -100,7 +100,7 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 	}
 
 	if len(addresses) == 0 {
-		return fmt.Errorf("No addresses found in wallet [%s]", rawTx.Account.AccountID)
+		return openwallet.Errorf(openwallet.ErrAccountNotAddress,"[%s] have not addresses", rawTx.Account.AccountID)
 	}
 
 	addressesBalanceList := make([]AddrBalance, 0, len(addresses))
@@ -172,7 +172,7 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 	}
 
 	if from == "" {
-		return errors.New("No enough XRP to send!")
+		return openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAccount, "the balance: %s is not enough", amountStr)
 	}
 
 	rawTx.TxFrom = []string{from}
@@ -186,7 +186,8 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 	}
 	blockHeight, _ := decoder.wm.Client.getBlockHeight()
 
-	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromPub, sequence, to, convertFromAmount(amountStr), fee, uint32(blockHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber))
+	memoData := rawTx.GetExtParam().Get("memo").String()
+	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromPub, sequence, to, convertFromAmount(amountStr), fee, uint32(blockHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, memoData,decoder.wm.Config.MemoFormat)
 	if err != nil {
 		return err
 	}
@@ -398,6 +399,7 @@ func (decoder *TransactionDecoder) CreateSimpleSummaryRawTransaction(wrapper ope
 		rawTx := &openwallet.RawTransaction{
 			Coin:    sumRawTx.Coin,
 			Account: sumRawTx.Account,
+			ExtParam: sumRawTx.ExtParam,
 			To: map[string]string{
 				sumRawTx.SummaryAddress: sumAmount,
 			},
@@ -456,7 +458,8 @@ func (decoder *TransactionDecoder) createRawTransaction(wrapper openwallet.Walle
 	if err != nil {
 		return errors.New("Failed to get block height when create summay transaction!")
 	}
-	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromAddr.PublicKey, sequence, to, convertFromAmount(amountStr), fee, uint32(currentHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber))
+	memoData := rawTx.GetExtParam().Get("memo").String()
+	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromAddr.PublicKey, sequence, to, convertFromAmount(amountStr), fee, uint32(currentHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, memoData,decoder.wm.Config.MemoFormat)
 
 	if err != nil {
 		return err

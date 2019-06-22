@@ -134,6 +134,9 @@ func (wm *WalletManager) LoadAssetsConfig(c config.Configer) error {
 	wm.Config.LastLedgerSequenceNumber, _ = c.Int64("lastLedgerSequenceNumber")
 	wm.Config.DataDir = c.String("dataDir")
 
+	wm.Config.MemoType = c.String("memoType")
+	wm.Config.MemoFormat = c.String("memoFormat")
+	wm.Config.MemoScan = c.String("memoScan")
 	//数据文件夹
 	wm.Config.makeDataDir()
 

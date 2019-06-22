@@ -49,7 +49,7 @@ func testCreateTransactionStep(tm *openw.WalletManager, walletID, accountID, to,
 	//	return nil, err
 	//}
 
-	rawTx, err := tm.CreateTransaction(testApp, walletID, accountID, amount, to, feeRate, "", contract)
+	rawTx, err := tm.CreateTransaction(testApp, walletID, accountID, amount, to, feeRate, "test", contract)
 
 	if err != nil {
 		log.Error("CreateTransaction failed, unexpected error:", err)
@@ -136,7 +136,7 @@ func TestTransfer(t *testing.T) {
 
 	testGetAssetsAccountBalance(tm, walletID, accountID)
 
-	rawTx, err := testCreateTransactionStep(tm, walletID, accountID, to, "1.000012", "", nil)
+	rawTx, err := testCreateTransactionStep(tm, walletID, accountID, to, "0.001", "", nil)
 	if err != nil {
 		return
 	}

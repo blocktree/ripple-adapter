@@ -576,6 +576,8 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 						input.BlockHeight = trx.BlockHeight
 						input.BlockHash = trx.BlockHash
 						input.Confirm = int64(currentHeight-trx.BlockHeight)
+						input.IsMemo = true
+						input.Memo = trx.MemoData
 						ed := result.extractData[sourceKey]
 						if ed == nil {
 							ed = openwallet.NewBlockExtractData()
@@ -596,6 +598,8 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 						input.BlockHeight = trx.BlockHeight
 						input.BlockHash = trx.BlockHash
 						input.Confirm = int64(currentHeight-trx.BlockHeight)
+						input.IsMemo = true
+						input.Memo = trx.MemoData
 						ed := result.extractData[sourceKey]
 						if ed == nil {
 							ed = openwallet.NewBlockExtractData()
@@ -629,6 +633,8 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 					input.BlockHeight = trx.BlockHeight
 					input.BlockHash = trx.BlockHash
 					input.Confirm = int64(currentHeight-trx.BlockHeight)
+					input.IsMemo = true
+					input.Memo = trx.MemoData
 					ed := result.extractData[sourceKey]
 					if ed == nil {
 						ed = openwallet.NewBlockExtractData()
@@ -654,6 +660,8 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 					output.BlockHeight = trx.BlockHeight
 					output.BlockHash = trx.BlockHash
 					output.Confirm = int64(currentHeight-trx.BlockHeight)
+					output.IsMemo = true
+					output.Memo = trx.MemoData
 					ed := result.extractData[sourceKey]
 					if ed == nil {
 						ed = openwallet.NewBlockExtractData()
@@ -687,6 +695,8 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 					Status:      status,
 					SubmitTime:  int64(trx.TimeStamp),
 					ConfirmTime: int64(trx.TimeStamp),
+					IsMemo:true,
+					Memo:trx.MemoData,
 				}
 
 				if !(trx.TxType == "Payment" && trx.To !=""){
@@ -1090,7 +1100,7 @@ func (wm *WalletManager) GetTransactionInMemPool(txid string) (*Transaction, err
 
 //GetTransaction 获取交易单
 func (wm *WalletManager) GetTransaction(txid string) (*Transaction, error) {
-	return wm.Client.getTransaction(txid)
+	return wm.Client.getTransaction(txid,wm.Config.MemoScan)
 }
 
 //获取未扫记录
@@ -1153,7 +1163,7 @@ func (bs *XRPBlockScanner) GetBalanceByAddress(address ...string) ([]*openwallet
 	return addrsBalance, nil
 }
 
-func (c *Client) getMultiAddrTransactions(offset, limit int, addresses ...string) ([]*Transaction, error) {
+func (c *Client) getMultiAddrTransactions(memoScan string,offset, limit int, addresses ...string) ([]*Transaction, error) {
 	var (
 		trxs      = make([]*Transaction, 0)
 		respLimit = "/limit/10000"
@@ -1169,7 +1179,7 @@ func (c *Client) getMultiAddrTransactions(offset, limit int, addresses ...string
 		txArray := resp.Array()[0].Array()
 
 		for _, txDetail := range txArray {
-			trxs = append(trxs, c.NewTransaction(&txDetail))
+			trxs = append(trxs, c.NewTransaction(&txDetail,memoScan))
 		}
 	}
 
@@ -1183,7 +1193,7 @@ func (bs *XRPBlockScanner) GetTransactionsByAddress(offset, limit int, coin open
 		array = make([]*openwallet.TxExtractData, 0)
 	)
 
-	trxs, err := bs.wm.Client.getMultiAddrTransactions(offset, limit, address...)
+	trxs, err := bs.wm.Client.getMultiAddrTransactions(bs.wm.Config.MemoScan,offset, limit, address...)
 	if err != nil {
 		return nil, err
 	}

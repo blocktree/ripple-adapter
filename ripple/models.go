@@ -16,6 +16,7 @@
 package ripple
 
 import (
+	"encoding/hex"
 	"fmt"
 	"strconv"
 
@@ -62,9 +63,10 @@ type Transaction struct {
 	BlockHeight uint64
 	BlockHash   string
 	Status      string
+	MemoData    string
 }
 
-func (c *Client) NewTransaction(json *gjson.Result) *Transaction {
+func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transaction {
 	obj := &Transaction{}
 	obj.TxType = gjson.Get(json.Raw, "TransactionType").String()
 	obj.TxID = gjson.Get(json.Raw, "hash").String()
@@ -80,6 +82,12 @@ func (c *Client) NewTransaction(json *gjson.Result) *Transaction {
 		obj.To = gjson.Get(json.Raw, "Destination").String()
 	}
 	obj.Status = gjson.Get(json.Raw, "status").String()
+	memos := gjson.Get(json.Raw, "Memos").Array()
+	if memos != nil && len(memos) >= 1 {
+		memoData := memos[0].Get("Memo").Get(memoScan).String()
+		memo, _ := hex.DecodeString(memoData)
+		obj.MemoData = string(memo)
+	}
 	return obj
 }
 

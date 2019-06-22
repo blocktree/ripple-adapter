@@ -316,7 +316,7 @@ func (c *Client) getBlockByHeight(height uint64) (*Block, error) {
 	return NewBlock(resp), nil
 }
 
-func (c *Client) getTransaction(txid string) (*Transaction, error) {
+func (c *Client) getTransaction(txid string, memoScan string) (*Transaction, error) {
 	request := []interface{}{
 		map[string]interface{}{
 			"transaction": txid,
@@ -327,7 +327,7 @@ func (c *Client) getTransaction(txid string) (*Transaction, error) {
 	if err != nil {
 		return nil, err
 	}
-	return c.NewTransaction(resp), nil
+	return c.NewTransaction(resp, memoScan), nil
 }
 
 func (c *Client) sendTransaction(rawTx string) (string, error) {

@@ -99,6 +99,12 @@ type WalletConfig struct {
 	LastLedgerSequenceNumber int64
 	// data directory
 	DataDir string
+	// memo type
+	MemoType string
+	// memo format
+	MemoFormat string
+	// which feild of memo to scan
+	MemoScan string
 }
 
 func NewConfig(symbol string, masterKey string) *WalletConfig {

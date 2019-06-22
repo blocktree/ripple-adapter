@@ -15,7 +15,7 @@ const (
 
 func Test_getBlockHeight(t *testing.T) {
 
-	c := NewClient(testNodeAPI, false)
+	c := NewClient(testNodeAPI, true)
 
 	r, err := c.getBlockHeight()
 
@@ -30,7 +30,7 @@ func Test_getBlockHeight(t *testing.T) {
 func Test_getBlockByHeight(t *testing.T) {
 
 	c := NewClient(testNodeAPI, true)
-	r, err := c.getBlockByHeight(48055411)
+	r, err := c.getBlockByHeight(48146498)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -55,7 +55,7 @@ func Test_getBlockHash(t *testing.T) {
 
 	c := NewClient(testNodeAPI, true)
 
-	height := uint64(48059518)
+	height := uint64(48142783)
 
 	r, err := c.getBlockHash(height)
 
@@ -99,7 +99,7 @@ func Test_getTransaction(t *testing.T) {
 	//txid := "852C8C41FC914FCBCF2A598FCA82738475ABAB35F5C79014E9C0236E53016521"
 	//txid := "27495DD615B7DA81B2198C849520DD4C2D4722B8F91E4382D779489E7D1CD8B6"
 	txid := "F045152131AE578074AFA1842C93C4817D633B19B66AF6A1679E404C879DFD41"
-	r, err := c.getTransaction(txid)
+	r, err := c.getTransaction(txid, "MemoData")
 
 	if err != nil {
 		fmt.Println(err)
@@ -159,7 +159,7 @@ func Test_getTransactionByAddresses(t *testing.T) {
 	addrs := "ARAA8AnUYa4kWwWkiZTTyztG5C6S9MFTx11"
 
 	c := NewClient(testNodeAPI, true)
-	result, err := c.getMultiAddrTransactions(0, -1, addrs)
+	result, err := c.getMultiAddrTransactions("MemoData", 0, -1, addrs)
 
 	if err != nil {
 		t.Error("get transactions failed!")

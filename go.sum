@@ -31,10 +31,9 @@ github.com/blocktree/go-owcdrivers v1.0.5/go.mod h1:HS5S8MYW1hdN6hEmwgqu/kWyFPkx
 github.com/blocktree/go-owcdrivers v1.0.12/go.mod h1:TKevypdvkQD4ItBGscwMJqWWMOhDo9vXwnV1wacNs9w=
 github.com/blocktree/go-owcdrivers v1.0.15/go.mod h1:8dHbObmem3ac25DCMxUTBpOgbLaddwv1I3OkO0hG7+8=
 github.com/blocktree/go-owcdrivers v1.0.21/go.mod h1:V+u/NTvUrjzxh5FhDW+B9d7+e4UzuGZfF9ImZerCCMA=
-github.com/blocktree/go-owcdrivers v1.0.23 h1:47ptNqyVfsspg8MngfJTqiOkQ7Fbuh/aHeYnvtzBmcU=
-github.com/blocktree/go-owcdrivers v1.0.23/go.mod h1:iyyJs7nj3LyRGjcoLnIpUK6238GIGLv9IB3uE6B0I4k=
-github.com/blocktree/go-owcdrivers v1.0.24 h1:sYscxoUL0R4VA5kSzs/DbJItPcGanvSw275Ej4eOFrI=
 github.com/blocktree/go-owcdrivers v1.0.24/go.mod h1:iyyJs7nj3LyRGjcoLnIpUK6238GIGLv9IB3uE6B0I4k=
+github.com/blocktree/go-owcdrivers v1.0.27 h1:BUJnbORvv3gd3b1DU74zbCw6gwsC96VLWvsc2eAVCPM=
+github.com/blocktree/go-owcdrivers v1.0.27/go.mod h1:mI7aOuGFTzra3IQF2b7SezjlsKNzjciSL2C5ct7QQ/0=
 github.com/blocktree/go-owcrypt v1.0.1 h1:hTqRN7mH2L0mVzHcL9jE0YM7B4oUFiDvksLEpam7oU8=
 github.com/blocktree/go-owcrypt v1.0.1/go.mod h1:5FCinL/4XVEqbmAFTOUgfMJVNJEw6WzVy624qsxzZC8=
 github.com/blocktree/ontology-adapter v1.0.8/go.mod h1:NA7qQB0g/85ty9XGLt+I0YeuV7ErnWhTTXC1MH/jCS8=
@@ -42,7 +41,9 @@ github.com/blocktree/openwallet v1.4.1 h1:Erju/SLK3qjU9OZ4JEsrUBD6wfvC0PBC+28rhy
 github.com/blocktree/openwallet v1.4.1/go.mod h1:jStJigV8cNTOmvzvWJ4bdjXhiRvtQtSh++uJxSZRcb0=
 github.com/blocktree/openwallet v1.4.3 h1:7fXKIOBdfDV0iJ09CI7GhYsELRQs2r90+HlMmaddmaU=
 github.com/blocktree/openwallet v1.4.3/go.mod h1:jStJigV8cNTOmvzvWJ4bdjXhiRvtQtSh++uJxSZRcb0=
+github.com/blocktree/ripple-adapter v1.0.3/go.mod h1:9BidhMwPmLjKnyuI7YurlyFCNdX4SzLsXG835q8zfLQ=
 github.com/blocktree/virtualeconomy-adapter v1.1.5/go.mod h1:L1qpSNof49eCtN1ep/LEz2H9ngKsDxzhRqoistQWa/U=
+github.com/blocktree/waykichain-adapter v1.0.3/go.mod h1:WwX/retaUfrLYP4ZOFVxtC4Duw1R4cjs+ErfjefqhEU=
 github.com/bndr/gotabulate v1.1.2/go.mod h1:0+8yUgaPTtLRTjf49E8oju7ojpU11YmXyvq1LbPAb3U=
 github.com/bradfitz/gomemcache v0.0.0-20180710155616-bc664df96737/go.mod h1:PmM6Mmwb0LSuEubjR8N7PtNe1KxZLtOUHtbeikc5h60=
 github.com/bradfitz/gomemcache v0.0.0-20190329173943-551aad21a668/go.mod h1:H0wQNHz2YrLsuXOZozoeDmnHXkNCRmMW0gwFWDfEZDA=
@@ -67,6 +68,7 @@ github.com/couchbase/go-couchbase v0.0.0-20190401022532-e1757383bdca/go.mod h1:T
 github.com/couchbase/gomemcached v0.0.0-20181122193126-5125a94a666c/go.mod h1:srVSlQLB8iXBVXHgnqemxUXqN6FCvClgCMPCsjBDR7c=
 github.com/couchbase/goutils v0.0.0-20180530154633-e865a1461c8a/go.mod h1:BQwMFlJzDjFDG3DJUdU0KORxn88UlsOULuxLExMh3Hs=
 github.com/cupcake/rdb v0.0.0-20161107195141-43ba34106c76/go.mod h1:vYwsqCOLxGiisLwp9rITslkFNpZD5rz43tf41QFkTWY=
+github.com/cweill/gotests v1.5.3 h1:k3t4wW/x/YNixWZJhUIn+mivmK5iV1tJVOwVYkx0UcU=
 github.com/cweill/gotests v1.5.3/go.mod h1:XZYOJkGVkCRoymaIzmp9Wyi3rUgfA3oOnkuljYrjFV8=
 github.com/davecgh/go-spew v0.0.0-20171005155431-ecdeabc65495/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
@@ -191,6 +193,7 @@ golang.org/x/net v0.0.0-20180724234803-3673e40ba225/go.mod h1:mL1N/T3taQHkDXs73r
 golang.org/x/net v0.0.0-20180906233101-161cd47e91fd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/net v0.0.0-20181114220301-adae6a3d119a h1:gOpx8G595UYyvj8UK4+OFyY4rx037g3fmfhe5SasG3U=
 golang.org/x/net v0.0.0-20181114220301-adae6a3d119a/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
 golang.org/x/net v0.0.0-20190613194153-d28f0bde5980 h1:dfGZHvZk057jK2MCeWus/TowKpJ8y4AmooUzdBSR9GU=
 golang.org/x/net v0.0.0-20190613194153-d28f0bde5980/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
 golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
