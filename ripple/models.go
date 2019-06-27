@@ -94,7 +94,7 @@ func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transactio
 
 func NewBlock(json *gjson.Result) *Block {
 	obj := &Block{}
-	// 解析
+	// 解 析
 	obj.Hash = gjson.Get(json.Raw, "ledger").Get("ledger_hash").String()
 	obj.PrevBlockHash = gjson.Get(json.Raw, "ledger").Get("parent_hash").String()
 	obj.TransactionMerkleRoot = gjson.Get(json.Raw, "ledger").Get("transaction_hash").String()
