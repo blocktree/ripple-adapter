@@ -19,6 +19,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/blocktree/openwallet/crypto"
 	"github.com/blocktree/openwallet/openwallet"
@@ -104,6 +105,9 @@ func NewBlock(json *gjson.Result) *Block {
 		obj.Transactions = append(obj.Transactions, tx.String())
 	}
 
+	if obj.Hash == "" {
+		time.Sleep(5 * time.Second)
+	}
 	return obj
 }
 
