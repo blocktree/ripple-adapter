@@ -125,8 +125,13 @@ func (wm *WalletManager) GetBlockScanner() openwallet.BlockScanner {
 func (wm *WalletManager) LoadAssetsConfig(c config.Configer) error {
 
 	wm.Config.NodeAPI = c.String("nodeAPI")
-
-	wm.Client = NewClient(wm.Config.NodeAPI, false)
+	wm.Config.WSAPI = c.String("wsAPI")
+	wm.Config.APIChoose = c.String("apiChoose")
+	if wm.Config.APIChoose == "rpc" {
+		wm.Client = NewClient(wm.Config.NodeAPI, false)
+	}else if wm.Config.APIChoose == "ws" {
+		wm.WSClient = NewWSClient(wm.Config.WSAPI, false)
+	}
 
 	wm.Config.FixedFee, _ = c.Int64("fixedFee")
 	wm.Config.ReserveAmount, _ = c.Int64("reserveAmount")

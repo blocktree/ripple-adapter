@@ -28,8 +28,8 @@ type WalletManager struct {
 	openwallet.AssetsAdapterBase
 
 	Storage *hdkeystore.HDKeystore //秘钥存取
-	Client  *Client                // 节点 API
-	//RPCClient       *RpcClient                    // RPC API
+	Client  *Client                // rpc API
+	WSClient *WSClient             // API API
 	Config          *WalletConfig                 //钱包管理配置
 	WalletsInSum    map[string]*openwallet.Wallet //参与汇总的钱包
 	Blockscanner    *XRPBlockScanner             //区块扫描器
@@ -99,8 +99,18 @@ func (wm *WalletManager) SendRawTransaction(txHex string) (string, error) {
 }
 
 func (wm *WalletManager) sendRawTransactionByNode(txHex string) (string, error) {
+	var (
+		txid string
+		err error
+	)
+	if wm.Config.APIChoose == "rpc" {
+		txid, err = wm.Client.sendTransaction(txHex)
+	} else if wm.Config.APIChoose == "ws" {
+		txid, err = wm.WSClient.sendTransaction(txHex)
+	}else {
+		return "",errors.New("Invalid config, check the ini file!")
+	}
 
-	txid, err := wm.Client.sendTransaction(txHex)
 	if err != nil {
 		return "", err
 	}

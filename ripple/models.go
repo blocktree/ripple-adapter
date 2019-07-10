@@ -92,6 +92,32 @@ func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transactio
 	return obj
 }
 
+
+func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transaction {
+	obj := &Transaction{}
+	obj.TxType = gjson.Get(json.Raw, "TransactionType").String()
+	obj.TxID = gjson.Get(json.Raw, "hash").String()
+	fee, _ := strconv.ParseInt(gjson.Get(json.Raw, "Fee").String(), 10, 64)
+	obj.Fee = uint64(fee)
+	obj.TimeStamp = uint64(946612800) + gjson.Get(json.Raw, "date").Uint() //1999-12-31 12:00:00 + date
+	obj.From = gjson.Get(json.Raw, "Account").String()
+	obj.BlockHeight = gjson.Get(json.Raw, "inLedger").Uint()
+	obj.BlockHash, _ = c.getBlockHash(obj.BlockHeight)
+	amount, err := strconv.ParseInt(gjson.Get(json.Raw, "Amount").String(), 10, 64)
+	if err == nil {
+		obj.Amount = uint64(amount)
+		obj.To = gjson.Get(json.Raw, "Destination").String()
+	}
+	obj.Status = gjson.Get(json.Raw, "status").String()
+	memos := gjson.Get(json.Raw, "Memos").Array()
+	if memos != nil && len(memos) >= 1 {
+		memoData := memos[0].Get("Memo").Get(memoScan).String()
+		memo, _ := hex.DecodeString(memoData)
+		obj.MemoData = string(memo)
+	}
+	return obj
+}
+
 func NewBlock(json *gjson.Result) *Block {
 	obj := &Block{}
 	// 解  析

@@ -97,7 +97,7 @@ func TestSubscribeAddress(t *testing.T) {
 
 	//log.Debug("already got scanner:", assetsMgr)
 	scanner := assetsMgr.GetBlockScanner()
-	scanner.SetRescanBlockHeight(48146498)
+	scanner.SetRescanBlockHeight(48559768)
 	if scanner == nil {
 		log.Error(symbol, "is not support block scan")
 		return

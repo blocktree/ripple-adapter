@@ -71,6 +71,10 @@ type WalletConfig struct {
 	ServerAPI string
 	// node API
 	NodeAPI string
+	// websocket API
+	WSAPI string
+	// rpc - NodeAPI   ws - WSAPI
+	APIChoose string
 	//钱包安装的路径
 	NodeInstallPath string
 	//钱包数据文件目录

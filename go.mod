@@ -9,6 +9,7 @@ require (
 	github.com/blocktree/go-owcrypt v1.0.1
 	github.com/blocktree/openwallet v1.4.3
 	github.com/ethereum/go-ethereum v1.8.25
+	github.com/gorilla/websocket v1.4.0
 	github.com/graarh/golang-socketio v0.0.0-20170510162725-2c44953b9b5f
 	github.com/imroc/req v0.2.3
 	github.com/pborman/uuid v1.2.0

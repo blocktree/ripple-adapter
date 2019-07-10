@@ -106,8 +106,16 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 	addressesBalanceList := make([]AddrBalance, 0, len(addresses))
 
 	for i, addr := range addresses {
-		balance, err := decoder.wm.Client.getBalance(addr.Address, decoder.wm.Config.IgnoreReserve, decoder.wm.Config.ReserveAmount)
-
+		var (
+			balance *AddrBalance
+		)
+		if decoder.wm.Config.APIChoose == "rpc" {
+			balance, err = decoder.wm.Client.getBalance(addr.Address,decoder.wm.Config.IgnoreReserve,decoder.wm.Config.ReserveAmount)
+		} else if decoder.wm.Config.APIChoose == "ws"{
+			balance, err = decoder.wm.WSClient.getBalance(addr.Address,decoder.wm.Config.IgnoreReserve,decoder.wm.Config.ReserveAmount)
+		} else {
+			return errors.New("Invalid config, check the ini file!")
+		}
 		if err != nil {
 			return err
 		}
@@ -137,7 +145,14 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 
 	amount := big.NewInt(int64(convertFromAmount(amountStr)))
 
-	isActived, err := decoder.wm.Client.isActived(to)
+	var isActived bool
+	if decoder.wm.Config.APIChoose == "rpc" {
+		isActived, err = decoder.wm.Client.isActived(to)
+	} else if decoder.wm.Config.APIChoose == "ws" {
+		isActived, err = decoder.wm.WSClient.isActived(to)
+	} else {
+		return errors.New("Invalid config, chech the ini file!")
+	}
 	if err != nil {
 		return errors.New("failed to get destination address active status!")
 	}
@@ -180,11 +195,31 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 	rawTx.TxAmount = amountStr
 	rawTx.Fees = convertToAmount(fee)
 	rawTx.FeeRate = convertToAmount(fee)
-	sequence, err := decoder.wm.Client.getSequence(from)
+
+
+	var (
+		sequence uint32
+		blockHeight uint64
+	)
+	if decoder.wm.Config.APIChoose == "rpc" {
+		sequence, err = decoder.wm.Client.getSequence(from)
+	}else if decoder.wm.Config.APIChoose == "ws" {
+		sequence, err = decoder.wm.WSClient.getSequence(from)
+	}else {
+		return errors.New("Invalid config, check the ini file!")
+	}
 	if err != nil {
 		return errors.New("Failed to get sequence when create transaction!")
 	}
-	blockHeight, _ := decoder.wm.Client.getBlockHeight()
+
+
+	if decoder.wm.Config.APIChoose == "rpc" {
+		blockHeight, err = decoder.wm.Client.getBlockHeight()
+	}else if decoder.wm.Config.APIChoose == "ws" {
+		blockHeight, err = decoder.wm.WSClient.getBlockHeight()
+	}else {
+		return errors.New("Invalid config, check the ini file!")
+	}
 
 	memoData := rawTx.GetExtParam().Get("memo").String()
 	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromPub, sequence, to, convertFromAmount(amountStr), fee, uint32(blockHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, memoData,decoder.wm.Config.MemoFormat)
@@ -379,8 +414,15 @@ func (decoder *TransactionDecoder) CreateSimpleSummaryRawTransaction(wrapper ope
 		if sumAmount_BI.Cmp(big.NewInt(0)) <= 0 {
 			continue
 		}
+		var isActived bool
+		if decoder.wm.Config.APIChoose == "rpc" {
+			isActived, err = decoder.wm.Client.isActived(sumRawTx.SummaryAddress)
+		} else if decoder.wm.Config.APIChoose == "ws" {
+			isActived, err = decoder.wm.WSClient.isActived(sumRawTx.SummaryAddress)
+		} else {
+			return nil, errors.New("Invalid config, chech the ini file!")
+		}
 
-		isActived, err := decoder.wm.Client.isActived(sumRawTx.SummaryAddress)
 		if err != nil {
 			return nil, errors.New("failed to get destination address active status in summary flow!")
 		}
@@ -450,11 +492,28 @@ func (decoder *TransactionDecoder) createRawTransaction(wrapper openwallet.Walle
 	rawTx.Fees = convertToAmount(fee)
 	rawTx.FeeRate = convertToAmount(fee)
 
-	sequence, err := decoder.wm.Client.getSequence(from)
+	var (
+		sequence uint32
+		currentHeight uint64
+	)
+	if decoder.wm.Config.APIChoose == "rpc" {
+		sequence, err = decoder.wm.Client.getSequence(from)
+	}else if decoder.wm.Config.APIChoose == "ws" {
+		sequence, err = decoder.wm.WSClient.getSequence(from)
+	}else {
+		return errors.New("Invalid config, check the ini file!")
+	}
 	if err != nil {
 		return errors.New("Failed to get sequence when create summay transaction!")
 	}
-	currentHeight, err := decoder.wm.Client.getBlockHeight()
+
+	if decoder.wm.Config.APIChoose == "rpc" {
+		currentHeight, err = decoder.wm.Client.getBlockHeight()
+	}else if decoder.wm.Config.APIChoose == "ws" {
+		currentHeight, err = decoder.wm.WSClient.getBlockHeight()
+	}else {
+		return errors.New("Invalid config, check the ini file!")
+	}
 	if err != nil {
 		return errors.New("Failed to get block height when create summay transaction!")
 	}

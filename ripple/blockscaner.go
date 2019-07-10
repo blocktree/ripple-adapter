@@ -140,7 +140,14 @@ func (bs *XRPBlockScanner) ScanBlockTask() {
 		currentHeight = currentHeight + 1
 		bs.wm.Log.Std.Info("block scanner scanning height: %d ...", currentHeight)
 
-		localBlock, err := bs.wm.Client.getBlockByHeight(currentHeight)
+		var localBlock *Block
+		if bs.wm.Config.APIChoose == "rpc" {
+			localBlock, err = bs.wm.Client.getBlockByHeight(currentHeight)
+		} else if bs.wm.Config.APIChoose == "ws" {
+			localBlock, err = bs.wm.WSClient.getBlockByHeight(currentHeight)
+		}else {
+			bs.wm.Log.Std.Info("Invalid config, check the ini file!")
+		}
 		if err != nil {
 			bs.wm.Log.Std.Info("getBlockByHeight failed; unexpected error: %v", err)
 			break
@@ -175,7 +182,13 @@ func (bs *XRPBlockScanner) ScanBlockTask() {
 				//查找core钱包的RPC
 				bs.wm.Log.Info("block scanner prev block height:", currentHeight)
 
-				localBlock, err = bs.wm.Client.getBlockByHeight(currentHeight)
+				if bs.wm.Config.APIChoose == "rpc" {
+					localBlock, err = bs.wm.Client.getBlockByHeight(currentHeight)
+				} else if bs.wm.Config.APIChoose == "ws" {
+					localBlock, err = bs.wm.WSClient.getBlockByHeight(currentHeight)
+				}else {
+					bs.wm.Log.Std.Info("Invalid config, check the ini file!")
+				}
 				if err != nil {
 					bs.wm.Log.Std.Error("block scanner can not get prev block; unexpected error: %v", err)
 					break
@@ -248,8 +261,17 @@ func (bs *XRPBlockScanner) ScanBlock(height uint64) error {
 }
 
 func (bs *XRPBlockScanner) scanBlock(height uint64) (*Block,error) {
-
-	block, err := bs.wm.Client.getBlockByHeight(height)
+	var (
+		block *Block
+		err error
+	)
+	if bs.wm.Config.APIChoose == "rpc" {
+		block, err = bs.wm.Client.getBlockByHeight(height)
+	} else if bs.wm.Config.APIChoose == "ws" {
+		block, err = bs.wm.WSClient.getBlockByHeight(height)
+	}else {
+		return nil, errors.New("Invalid config, check the ini file!")
+	}
 	if err != nil {
 		bs.wm.Log.Std.Info("block scanner can not get new block data; unexpected error: %v", err)
 
@@ -330,7 +352,14 @@ func (bs *XRPBlockScanner) RescanFailedRecord() {
 
 			if len(txs) == 0 {
 
-				block, err := bs.wm.Client.getBlockByHeight(height)
+				var block *Block
+				if bs.wm.Config.APIChoose == "rpc" {
+					block, err = bs.wm.Client.getBlockByHeight(height)
+				} else if bs.wm.Config.APIChoose == "ws" {
+					block, err = bs.wm.WSClient.getBlockByHeight(height)
+				}else {
+					bs.wm.Log.Std.Info("Invalid config, check the ini file!")
+				}
 				if err != nil {
 					bs.wm.Log.Std.Info("block scanner can not get new block data; unexpected error: %v", err)
 					continue
@@ -550,7 +579,17 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 		success = true
 	)
 	createAt := time.Now().Unix()
-	currentHeight,err := bs.wm.Client.getBlockHeight()
+	var (
+		currentHeight uint64
+		err error
+	)
+	if bs.wm.Config.APIChoose == "rpc"{
+		currentHeight,err = bs.wm.Client.getBlockHeight()
+	}else if bs.wm.Config.APIChoose == "ws" {
+		currentHeight, err = bs.wm.WSClient.getBlockHeight()
+	} else {
+		//
+	}
 
 	if trx == nil || err != nil{
 		//记录哪个区块哪个交易单没有完成扫描
@@ -822,8 +861,15 @@ func (bs *XRPBlockScanner) GetCurrentBlockHeader() (*openwallet.BlockHeader, err
 	if err != nil {
 		return nil, err
 	}
+	var block *Block
+	if bs.wm.Config.APIChoose == "rpc" {
+		block, err = bs.wm.Client.getBlockByHeight(blockHeight)
+	} else if bs.wm.Config.APIChoose == "ws" {
+		block, err = bs.wm.WSClient.getBlockByHeight(blockHeight)
+	}else {
+		return nil, errors.New("Invalid config, check the ini file!")
+	}
 
-	block, err := bs.wm.Client.getBlockByHeight(blockHeight)
 	if err != nil {
 		bs.wm.Log.Errorf("get block spec by block number failed, err=%v", err)
 		return nil, err
@@ -857,8 +903,14 @@ func (bs *XRPBlockScanner) GetScannedBlockHeader() (*openwallet.BlockHeader, err
 
 		//就上一个区块链为当前区块
 		blockHeight = blockHeight - 1
-
-		block, err := bs.wm.Client.getBlockByHeight(blockHeight)
+		var block *Block
+		if bs.wm.Config.APIChoose == "rpc" {
+			block, err = bs.wm.Client.getBlockByHeight(blockHeight)
+		} else if bs.wm.Config.APIChoose == "ws" {
+			block, err = bs.wm.WSClient.getBlockByHeight(blockHeight)
+		}else {
+			return nil, errors.New("Invalid config, check the ini file!")
+		}
 		if err != nil {
 			bs.wm.Log.Errorf("get block spec by block number failed, err=%v", err)
 			return nil, err
@@ -1000,7 +1052,14 @@ func (bs *XRPBlockScanner) GetSourceKeyByAddress(address string) (string, bool) 
 
 //GetBlockHeight 获取区块链高度
 func (wm *WalletManager) GetBlockHeight() (uint64, error) {
-	return wm.Client.getBlockHeight()
+	if wm.Config.APIChoose == "rpc" {
+		return wm.Client.getBlockHeight()
+	}else if wm.Config.APIChoose == "ws" {
+		return wm.WSClient.getBlockHeight()
+	}else {
+		return 0, errors.New("Invalid config, check the ini file!")
+	}
+
 }
 
 //GetLocalNewBlock 获取本地记录的区块高度和hash
@@ -1060,7 +1119,14 @@ func (wm *WalletManager) SaveLocalBlock(block *Block) {
 
 //GetBlockHash 根据区块高度获得区块hash
 func (wm *WalletManager) GetBlockHash(height uint64) (string, error) {
-	return wm.Client.getBlockHash(height)
+	if wm.Config.APIChoose == "rpc" {
+		return wm.Client.getBlockHash(height)
+	} else if wm.Config.APIChoose == "ws" {
+		return wm.WSClient.getBlockHash(height)
+	} else {
+		return "", errors.New("Invalid config, check the ini file!")
+	}
+
 }
 
 //GetLocalBlock 获取本地区块数据
@@ -1086,7 +1152,13 @@ func (wm *WalletManager) GetLocalBlock(height uint64) (*Block, error) {
 
 //GetBlock 获取区块数据
 func (wm *WalletManager) GetBlock(hash string) (*Block, error) {
-	return wm.Client.getBlock(hash)
+	if wm.Config.APIChoose == "rpc" {
+		return wm.Client.getBlock(hash)
+	} else if wm.Config.APIChoose == "ws" {
+		return wm.WSClient.getBlock(hash)
+	} else {
+		return nil, errors.New("Invalid config, check the ini file!")
+	}
 }
 
 //GetTxIDsInMemPool 获取待处理的交易池中的交易单IDs
@@ -1100,7 +1172,13 @@ func (wm *WalletManager) GetTransactionInMemPool(txid string) (*Transaction, err
 
 //GetTransaction 获取交易单
 func (wm *WalletManager) GetTransaction(txid string) (*Transaction, error) {
-	return wm.Client.getTransaction(txid,wm.Config.MemoScan)
+	if wm.Config.APIChoose == "rpc" {
+		return wm.Client.getTransaction(txid,wm.Config.MemoScan)
+	}else if wm.Config.APIChoose == "ws" {
+		return wm.WSClient.getTransaction(txid,wm.Config.MemoScan)
+	} else {
+		return nil, errors.New("Invalid config, check the ini file!")
+	}
 }
 
 //获取未扫记录
@@ -1148,7 +1226,19 @@ func (bs *XRPBlockScanner) GetBalanceByAddress(address ...string) ([]*openwallet
 	addrsBalance := make([]*openwallet.Balance, 0)
 
 	for _, addr := range address {
-		balance, err := bs.wm.Client.getBalance(addr,bs.wm.Config.IgnoreReserve,bs.wm.Config.ReserveAmount)
+		var (
+			balance *AddrBalance
+			err error
+		)
+
+		if bs.wm.Config.APIChoose == "rpc" {
+			balance, err = bs.wm.Client.getBalance(addr,bs.wm.Config.IgnoreReserve,bs.wm.Config.ReserveAmount)
+		} else if bs.wm.Config.APIChoose == "ws"{
+			balance, err = bs.wm.WSClient.getBalance(addr,bs.wm.Config.IgnoreReserve,bs.wm.Config.ReserveAmount)
+		} else {
+			return nil, errors.New("Invalid config, check the ini file!")
+		}
+
 		if err != nil {
 			return nil, err
 		}

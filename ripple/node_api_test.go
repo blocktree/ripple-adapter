@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	testNodeAPI = ""
+	//testNodeAPI = "http://47.244.179.69:20027"
+	testNodeAPI = "http://47.244.179.69:20029"
 )
 
 func Test_getBlockHeight(t *testing.T) {
@@ -30,7 +31,7 @@ func Test_getBlockHeight(t *testing.T) {
 func Test_getBlockByHeight(t *testing.T) {
 
 	c := NewClient(testNodeAPI, true)
-	r, err := c.getBlockByHeight(48146498)
+	r, err := c.getBlockByHeight(48169056)
 	if err != nil {
 		fmt.Println(err)
 	} else {
