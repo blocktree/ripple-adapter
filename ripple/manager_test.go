@@ -15,13 +15,39 @@
 
 package ripple
 
+import (
+	"github.com/astaxie/beego/config"
+	"path/filepath"
+)
+
+
 var (
 	tw *WalletManager
 )
 
 func init() {
-	tw = NewWalletManager()
-	tw.Config.RpcUser = ""
-	tw.Config.RpcPassword = ""
-	tw.Client = NewClient("", true)
+
+	tw = testNewWalletManager()
 }
+
+func testNewWalletManager() *WalletManager {
+	wm := NewWalletManager()
+
+	//读取配置
+	absFile := filepath.Join("conf", "conf.ini")
+	//log.Debug("absFile:", absFile)
+	c, err := config.NewConfig("ini", absFile)
+	if err != nil {
+		panic(err)
+	}
+	wm.LoadAssetsConfig(c)
+	wm.WSClient.debug = true
+	return wm
+}
+
+//func init() {
+//	tw = NewWalletManager()
+//	tw.Config.RpcUser = ""
+//	tw.Config.RpcPassword = ""
+//	tw.Client = NewClient("", true)
+//}
