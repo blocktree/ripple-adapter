@@ -77,7 +77,7 @@ func Test_ws_gwtBlockHash(t *testing.T) {
 }
 
 func Test_ws_getSequence(t *testing.T){
-	c := NewWSClient(wsurl, 0, true)
+	c := tw.WSClient
 	addr := "rMzax7NdBeVe5dqwo87VQepccSh9AWyP1m"
 
 	sequence, err := c.getSequence(addr)
@@ -149,7 +149,7 @@ func Test_ws_getBalance(t *testing.T){
 
 
 func Test_ws_isActived(t *testing.T){
-	c := NewWSClient(wsurl, 0, true)
+	c := tw.WSClient
 	addr := "rMzax7NdBeVe5dqwo87VQepccSh9AWyP1m"
 
 	isActived, err := c.isActived(addr)
@@ -172,7 +172,7 @@ func Test_ws_isActived(t *testing.T){
 }
 
 func Test_ws_getBlockByHeight(t *testing.T) {
-	c := NewWSClient(wsurl, 0, true)
+	c := tw.WSClient
 	r, err := c.getBlockByHeight(48554232)
 	if err != nil {
 		fmt.Println(err)
@@ -185,7 +185,7 @@ func Test_ws_getBlockByHeight(t *testing.T) {
 
 func Test_ws_getTransaction(t *testing.T) {
 
-	c := NewWSClient(wsurl, 0, true)
+	c := tw.WSClient
 	txid := "7B5CE804B39DAD4F1EAF0BC147923B68E12E91D2C9A8F3F0E370848B6E7675E9"
 	r, err := c.getTransaction(txid, "MemoData")
 
