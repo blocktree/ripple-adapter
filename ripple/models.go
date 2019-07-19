@@ -108,7 +108,11 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 		obj.Amount = uint64(amount)
 		obj.To = gjson.Get(json.Raw, "Destination").String()
 	}
-	obj.Status = gjson.Get(json.Raw, "status").String()
+
+	if gjson.Get(json.Raw, "meta").Get("TransactionResult").String() == "tesSUCCESS" {
+		obj.Status = "success"
+	}
+
 	memos := gjson.Get(json.Raw, "Memos").Array()
 	if memos != nil && len(memos) >= 1 {
 		memoData := memos[0].Get("Memo").Get(memoScan).String()
