@@ -262,7 +262,7 @@ func (c *WSClient) sendTransaction(rawTx string) (string, error) {
 	time.Sleep(time.Duration(1) * time.Second)
 
 	if resp.Get("result").Get("engine_result").String() != "tesSUCCESS" && resp.Get("result").Get("engine_result").String() != "terQUEUED" {
-		return "", errors.New("Submit transaction with error: " + resp.Get("result").Get("engine_result_message").String())
+		return "", errors.New("Submit transaction with error: " + resp.String())//resp.Get("result").Get("engine_result_message").String())
 	}
 
 	return resp.Get("result").Get("tx_json").Get("hash").String(), nil
