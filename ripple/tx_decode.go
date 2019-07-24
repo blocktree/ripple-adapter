@@ -16,6 +16,7 @@
 package ripple
 
 import (
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"math/big"
@@ -289,7 +290,10 @@ func (decoder *TransactionDecoder) SignXRPRawTransaction(wrapper openwallet.Wall
 
 				// txHash.Normal.SigPub = *sigPub
 			}
-
+			sigBytes,_ := hex.DecodeString(signature)
+			if sigBytes[32] >= 0x80 {
+				return errors.New("Failed to serilize S in tx_decode!")
+			}
 			keySignature.Signature = signature
 		}
 	}
