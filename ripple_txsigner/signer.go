@@ -21,5 +21,9 @@ func (singer *TransactionSigner) SignTransactionHash(msg []byte, privateKey []by
 	}
 	signature,_ := hex.DecodeString(sigStr)
 
+	if signature[32] >= 0x80 {
+		return nil, fmt.Errorf("Failed to serilize S in txsigner!")
+	}
+
 	return signature, nil
 }

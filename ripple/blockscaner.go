@@ -537,9 +537,18 @@ func (bs *XRPBlockScanner) ExtractTransaction(blockHeight uint64, blockHash stri
 		trx, err = bs.wm.GetTransaction(txid)
 
 		if err != nil {
-			bs.wm.Log.Std.Info("block scanner can not extract transaction data; unexpected error: %v", err)
-			result.Success = false
-			return result
+			if err.Error() == "txnNotFound" {
+				trx, err = bs.wm.WSClient.getTransactionWithHeight(txid, blockHeight)
+				if err != nil {
+					bs.wm.Log.Std.Info("block scanner can not extract transaction data; unexpected error: %v", err)
+					result.Success = false
+					return result
+				}
+			}else {
+				bs.wm.Log.Std.Info("block scanner can not extract transaction data; unexpected error: %v", err)
+				result.Success = false
+				return result
+			}
 		}
 	}
 

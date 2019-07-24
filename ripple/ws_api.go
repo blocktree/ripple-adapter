@@ -246,6 +246,28 @@ func (c *WSClient) getTransaction(txid string, memoScan string) (*Transaction, e
 	return c.NewTransaction(&trans, memoScan), nil
 }
 
+func (c *WSClient) getTransactionWithHeight(txid string, height uint64)(*Transaction, error){
+	request := map[string]interface{}{
+		//"id":          1,
+		//"command":     "tx",
+		"tx_hash": txid,
+		"ledger_index":      height,
+	}
+	resp, err := c.Call("transaction_entry", request)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Get("error").String() != "" {
+		return nil, errors.New(resp.Get("error").String())
+	}
+
+	trans := resp.Get("result")
+
+
+	return NewTransaction(&trans), nil
+}
+
 func (c *WSClient) sendTransaction(rawTx string) (string, error) {
 	request := map[string]interface{}{
 		//"id":      14,

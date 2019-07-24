@@ -102,7 +102,9 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 	obj.TimeStamp = uint64(946612800) + gjson.Get(json.Raw, "date").Uint() //1999-12-31 12:00:00 + date
 	obj.From = gjson.Get(json.Raw, "Account").String()
 	obj.BlockHeight = gjson.Get(json.Raw, "inLedger").Uint()
-	obj.BlockHash, _ = c.getBlockHash(obj.BlockHeight)
+	if obj.BlockHeight != 0{
+		obj.BlockHash, _ = c.getBlockHash(obj.BlockHeight)
+	}
 	amount, err := strconv.ParseInt(gjson.Get(json.Raw, "Amount").String(), 10, 64)
 	if err == nil {
 		obj.Amount = uint64(amount)
@@ -118,6 +120,27 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 		memoData := memos[0].Get("Memo").Get(memoScan).String()
 		memo, _ := hex.DecodeString(memoData)
 		obj.MemoData = string(memo)
+	}
+	return obj
+}
+
+
+func NewTransaction(json  *gjson.Result) *Transaction {
+	obj := &Transaction{}
+	obj.BlockHash = json.Get("ledger_hash").String()
+	obj.BlockHeight = json.Get("ledger_index").Uint()
+	obj.TxType = json.Get("tx_json").Get("TransactionType").String()
+	obj.TxID = json.Get("tx_json").Get("hash").String()
+	fee, _ := strconv.ParseInt(json.Get("tx_json").Get("Fee").String(), 10, 64)
+	obj.Fee = uint64(fee)
+	obj.From = json.Get("tx_json").Get("Account").String()
+	amount, err := strconv.ParseInt(json.Get("tx_json").Get("Amount").String(), 10, 64)
+	if err == nil {
+		obj.Amount = uint64(amount)
+		obj.To = json.Get("tx_json").Get("Destination").String()
+	}
+	if json.Get( "metadata").Get("TransactionResult").String() == "tesSUCCESS" {
+		obj.Status = "success"
 	}
 	return obj
 }
