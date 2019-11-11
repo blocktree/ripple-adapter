@@ -625,7 +625,7 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 						input.BlockHash = trx.BlockHash
 						input.Confirm = int64(currentHeight-trx.BlockHeight)
 						input.IsMemo = true
-						input.Memo = trx.MemoData
+						//input.Memo = trx.MemoData
 						ed := result.extractData[sourceKey]
 						if ed == nil {
 							ed = openwallet.NewBlockExtractData()
@@ -647,7 +647,7 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 						input.BlockHash = trx.BlockHash
 						input.Confirm = int64(currentHeight-trx.BlockHeight)
 						input.IsMemo = true
-						input.Memo = trx.MemoData
+						//input.Memo = trx.MemoData
 						ed := result.extractData[sourceKey]
 						if ed == nil {
 							ed = openwallet.NewBlockExtractData()
@@ -682,7 +682,7 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 					input.BlockHash = trx.BlockHash
 					input.Confirm = int64(currentHeight-trx.BlockHeight)
 					input.IsMemo = true
-					input.Memo = trx.MemoData
+					//input.Memo = trx.MemoData
 					ed := result.extractData[sourceKey]
 					if ed == nil {
 						ed = openwallet.NewBlockExtractData()
@@ -709,7 +709,7 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 					output.BlockHash = trx.BlockHash
 					output.Confirm = int64(currentHeight-trx.BlockHeight)
 					output.IsMemo = true
-					output.Memo = trx.MemoData
+					//output.Memo = trx.MemoData
 					ed := result.extractData[sourceKey]
 					if ed == nil {
 						ed = openwallet.NewBlockExtractData()
@@ -744,8 +744,10 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 					SubmitTime:  int64(trx.TimeStamp),
 					ConfirmTime: int64(trx.TimeStamp),
 					IsMemo:true,
-					Memo:trx.MemoData,
+					//Memo:trx.MemoData,
 				}
+
+				tx.SetExtParam("memo", trx.MemoData)
 
 				if !(trx.TxType == "Payment" && trx.To !=""){
 					tx.From = []string{trx.From + ":" + convertToAmount(trx.Fee)}
