@@ -2,7 +2,6 @@ package ripple
 
 import (
 	"errors"
-	"fmt"
 	"math/big"
 	"time"
 )
@@ -276,7 +275,6 @@ func (c *WSClient) sendTransaction(rawTx string) (string, error) {
 	}
 
 	resp, err := c.Call("submit", request)
-	fmt.Println(resp)
 	if err != nil {
 		return "", err
 	}

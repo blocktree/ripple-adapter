@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"math/big"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/blocktree/go-owcdrivers/rippleTransaction"
@@ -222,8 +223,11 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 		return errors.New("Invalid config, check the ini file!")
 	}
 
-	memoData := rawTx.GetExtParam().Get("memo").String()
-	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromPub, sequence, to, convertFromAmount(amountStr), fee, uint32(blockHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, memoData,decoder.wm.Config.MemoFormat)
+	destinationTag, err := strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
+	if err != nil {
+		return errors.New("Invalid destination tag, shoul be uint32 number string inn base 10!")
+	}
+	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromPub, uint32(destinationTag), sequence, to, convertFromAmount(amountStr), fee, uint32(blockHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, "",decoder.wm.Config.MemoFormat)
 	if err != nil {
 		return err
 	}
@@ -521,8 +525,11 @@ func (decoder *TransactionDecoder) createRawTransaction(wrapper openwallet.Walle
 	if err != nil {
 		return errors.New("Failed to get block height when create summay transaction!")
 	}
-	memoData := rawTx.GetExtParam().Get("memo").String()
-	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromAddr.PublicKey, sequence, to, convertFromAmount(amountStr), fee, uint32(currentHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, memoData,decoder.wm.Config.MemoFormat)
+	destinationTag, err := strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
+	if err != nil {
+		return errors.New("Invalid destination tag, shoul be uint32 number string inn base 10!")
+	}
+	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromAddr.PublicKey, uint32(destinationTag), sequence, to, convertFromAmount(amountStr), fee, uint32(currentHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, "",decoder.wm.Config.MemoFormat)
 
 	if err != nil {
 		return err

@@ -16,7 +16,6 @@
 package ripple
 
 import (
-	"encoding/hex"
 	"fmt"
 	"strconv"
 	"time"
@@ -64,7 +63,7 @@ type Transaction struct {
 	BlockHeight uint64
 	BlockHash   string
 	Status      string
-	MemoData    string
+	DestinationTag    string
 }
 
 func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transaction {
@@ -83,12 +82,7 @@ func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transactio
 		obj.To = gjson.Get(json.Raw, "Destination").String()
 	}
 	obj.Status = gjson.Get(json.Raw, "status").String()
-	memos := gjson.Get(json.Raw, "Memos").Array()
-	if memos != nil && len(memos) >= 1 {
-		memoData := memos[0].Get("Memo").Get(memoScan).String()
-		memo, _ := hex.DecodeString(memoData)
-		obj.MemoData = string(memo)
-	}
+	obj.DestinationTag = gjson.Get(json.Raw, "DestinationTag").String()
 	return obj
 }
 
@@ -115,12 +109,7 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 		obj.Status = "success"
 	}
 
-	memos := gjson.Get(json.Raw, "Memos").Array()
-	if memos != nil && len(memos) >= 1 {
-		memoData := memos[0].Get("Memo").Get(memoScan).String()
-		memo, _ := hex.DecodeString(memoData)
-		obj.MemoData = string(memo)
-	}
+	obj.DestinationTag = gjson.Get(json.Raw, "DestinationTag").String()
 	return obj
 }
 

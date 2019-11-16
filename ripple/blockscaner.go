@@ -747,7 +747,7 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 					//Memo:trx.MemoData,
 				}
 
-				tx.SetExtParam("memo", trx.MemoData)
+				tx.SetExtParam("memo", trx.DestinationTag)
 
 				if !(trx.TxType == "Payment" && trx.To !=""){
 					tx.From = []string{trx.From + ":" + convertToAmount(trx.Fee)}
