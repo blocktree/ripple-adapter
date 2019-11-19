@@ -166,7 +166,7 @@ func (bs *XRPBlockScanner) ScanBlockTask() {
 
 			//删除上一区块链的所有充值记录
 			//bs.DeleteRechargesByHeight(currentHeight - 1)
-			forkBlock, _ := bs.wm.GetLocalBlock(previousHeight)
+			forkBlock, _ := bs.GetLocalBlock(uint32(previousHeight))
 			//删除上一区块链的未扫记录
 			bs.wm.DeleteUnscanRecord(previousHeight)
 			currentHeight = previousHeight - 1 //倒退2个区块重新扫描
@@ -174,7 +174,7 @@ func (bs *XRPBlockScanner) ScanBlockTask() {
 				currentHeight = 1
 			}
 
-			localBlock, err = bs.wm.GetLocalBlock(currentHeight)
+			localBlock, err = bs.GetLocalBlock(uint32(currentHeight))
 			if err != nil && err != storm.ErrNotFound {
 				bs.wm.Log.Std.Error("block scanner can not get local block; unexpected error: %v", err)
 				break
@@ -223,7 +223,7 @@ func (bs *XRPBlockScanner) ScanBlockTask() {
 
 			//保存本地新高度
 			bs.wm.SaveLocalNewBlock(currentHeight, currentHash)
-			bs.wm.SaveLocalBlock(localBlock)
+			bs.SaveLocalBlock(localBlock)
 
 			isFork = false
 		}
@@ -276,7 +276,7 @@ func (bs *XRPBlockScanner) scanBlock(height uint64) (*Block,error) {
 		bs.wm.Log.Std.Info("block scanner can not get new block data; unexpected error: %v", err)
 
 		//记录未扫区块
-		unscanRecord := NewUnscanRecord(height, "", err.Error())
+		unscanRecord := openwallet.NewUnscanRecord(height, "", err.Error(), bs.wm.Symbol())
 		bs.SaveUnscanRecord(unscanRecord)
 		bs.wm.Log.Std.Info("block height: %d extract failed.", height)
 		return nil,err
@@ -323,7 +323,7 @@ func (bs *XRPBlockScanner) RescanFailedRecord() {
 		blockMap = make(map[uint64][]string)
 	)
 
-	list, err := bs.wm.GetUnscanRecords()
+	list, err := bs.GetUnscanRecords()
 	if err != nil {
 		bs.wm.Log.Std.Info("block scanner can not get rescan data; unexpected error: %v", err)
 	}
@@ -427,7 +427,7 @@ func (bs *XRPBlockScanner) BatchExtractTransaction(blockHeight uint64, blockHash
 				}
 			} else {
 				//记录未扫区块
-				unscanRecord := NewUnscanRecord(height, "", "")
+				unscanRecord := openwallet.NewUnscanRecord(height, "", "",bs.wm.Symbol())
 				bs.SaveUnscanRecord(unscanRecord)
 				bs.wm.Log.Std.Info("block height: %d extract failed.", height)
 				failed++ //标记保存失败数
@@ -778,7 +778,7 @@ func (bs *XRPBlockScanner) newExtractDataNotify(height uint64, extractData map[s
 			if err != nil {
 				bs.wm.Log.Error("BlockExtractDataNotify unexpected error:", err)
 				//记录未扫区块
-				unscanRecord := NewUnscanRecord(height, "", "ExtractData Notify failed.")
+				unscanRecord := openwallet.NewUnscanRecord(height, "", "ExtractData Notify failed.",bs.wm.Symbol())
 				err = bs.SaveUnscanRecord(unscanRecord)
 				if err != nil {
 					bs.wm.Log.Std.Error("block height: %d, save unscan record failed. unexpected error: %v", height, err.Error())
@@ -1016,27 +1016,6 @@ func (bs *XRPBlockScanner) ExtractTransactionData(txid string, scanTargetFunc op
 //	return nil
 //}
 
-//SaveTxToWalletDB 保存交易记录到钱包数据库
-func (bs *XRPBlockScanner) SaveUnscanRecord(record *UnscanRecord) error {
-
-	if record == nil {
-		return errors.New("the unscan record to save is nil")
-	}
-
-	//if record.BlockHeight == 0 {
-	//	return errors.New("unconfirmed transaction do not rescan")
-	//}
-
-	//获取本地区块高度
-	db, err := storm.Open(filepath.Join(bs.wm.Config.dbPath, bs.wm.Config.BlockchainFile))
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	return db.Save(record)
-}
-
 //GetSourceKeyByAddress 获取地址对应的数据源标识
 func (bs *XRPBlockScanner) GetSourceKeyByAddress(address string) (string, bool) {
 	bs.Mu.RLock()
@@ -1116,18 +1095,6 @@ func (wm *WalletManager) SaveLocalNewBlock(blockHeight uint64, blockHash string)
 	db.Set(blockchainBucket, "blockHash", &blockHash)
 }
 
-//SaveLocalBlock 记录本地新区块
-func (wm *WalletManager) SaveLocalBlock(block *Block) {
-
-	db, err := storm.Open(filepath.Join(wm.Config.dbPath, wm.Config.BlockchainFile))
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	db.Save(block)
-}
-
 //GetBlockHash 根据区块高度获得区块hash
 func (wm *WalletManager) GetBlockHash(height uint64) (string, error) {
 	if wm.Config.APIChoose == "rpc" {
@@ -1138,27 +1105,6 @@ func (wm *WalletManager) GetBlockHash(height uint64) (string, error) {
 		return "", errors.New("Invalid config, check the ini file!")
 	}
 
-}
-
-//GetLocalBlock 获取本地区块数据
-func (wm *WalletManager) GetLocalBlock(height uint64) (*Block, error) {
-
-	var (
-		block Block
-	)
-
-	db, err := storm.Open(filepath.Join(wm.Config.dbPath, wm.Config.BlockchainFile))
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	err = db.One("Height", height, &block)
-	if err != nil {
-		return nil, err
-	}
-
-	return &block, nil
 }
 
 //GetBlock 获取区块数据
@@ -1190,23 +1136,6 @@ func (wm *WalletManager) GetTransaction(txid string) (*Transaction, error) {
 	} else {
 		return nil, errors.New("Invalid config, check the ini file!")
 	}
-}
-
-//获取未扫记录
-func (wm *WalletManager) GetUnscanRecords() ([]*UnscanRecord, error) {
-	//获取本地区块高度
-	db, err := storm.Open(filepath.Join(wm.Config.dbPath, wm.Config.BlockchainFile))
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	var list []*UnscanRecord
-	err = db.All(&list)
-	if err != nil {
-		return nil, err
-	}
-	return list, nil
 }
 
 //DeleteUnscanRecord 删除指定高度的未扫记录
@@ -1452,4 +1381,10 @@ func (bs *XRPBlockScanner) setupSocketIO() error {
 	}
 
 	return nil
+}
+
+//SupportBlockchainDAI 支持外部设置区块链数据访问接口
+//@optional
+func (bs *XRPBlockScanner) SupportBlockchainDAI() bool {
+	return true
 }
