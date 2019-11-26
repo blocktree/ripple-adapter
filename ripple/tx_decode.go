@@ -223,10 +223,17 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 		return errors.New("Invalid config, check the ini file!")
 	}
 
-	destinationTag, err := strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
-	if err != nil {
-		return errors.New("Invalid destination tag, shoul be uint32 number string inn base 10!")
+	var destinationTag uint64
+	tagStr := rawTx.GetExtParam().Get("memo").String()
+	if tagStr == "" {
+		destinationTag = 1234
+	} else {
+		destinationTag, err = strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
+		if err != nil {
+			return errors.New("Invalid destination tag, shoul be uint32 number string inn base 10!")
+		}
 	}
+
 	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromPub, uint32(destinationTag), sequence, to, convertFromAmount(amountStr), fee, uint32(blockHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, "",decoder.wm.Config.MemoFormat)
 	if err != nil {
 		return err
@@ -525,10 +532,18 @@ func (decoder *TransactionDecoder) createRawTransaction(wrapper openwallet.Walle
 	if err != nil {
 		return errors.New("Failed to get block height when create summay transaction!")
 	}
-	destinationTag, err := strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
-	if err != nil {
-		return errors.New("Invalid destination tag, shoul be uint32 number string inn base 10!")
+
+	var destinationTag uint64
+	tagStr := rawTx.GetExtParam().Get("memo").String()
+	if tagStr == "" {
+		destinationTag = 1234
+	} else {
+		destinationTag, err = strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
+		if err != nil {
+			return errors.New("Invalid destination tag, shoul be uint32 number string inn base 10!")
+		}
 	}
+
 	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromAddr.PublicKey, uint32(destinationTag), sequence, to, convertFromAmount(amountStr), fee, uint32(currentHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, "",decoder.wm.Config.MemoFormat)
 
 	if err != nil {
