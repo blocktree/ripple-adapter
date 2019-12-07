@@ -223,18 +223,19 @@ func (decoder *TransactionDecoder) CreateXRPRawTransaction(wrapper openwallet.Wa
 		return errors.New("Invalid config, check the ini file!")
 	}
 
-	var destinationTag uint64
+	var destinationTag int64
 	tagStr := rawTx.GetExtParam().Get("memo").String()
 	if tagStr == "" {
-		destinationTag = 1234
+		destinationTag = -1
 	} else {
-		destinationTag, err = strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
+		tmp, err := strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
 		if err != nil {
 			return errors.New("Invalid destination tag, shoul be uint32 number string inn base 10!")
 		}
+		destinationTag = int64(tmp)
 	}
 
-	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromPub, uint32(destinationTag), sequence, to, convertFromAmount(amountStr), fee, uint32(blockHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, "",decoder.wm.Config.MemoFormat)
+	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromPub, int32(destinationTag), sequence, to, convertFromAmount(amountStr), fee, uint32(blockHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, "",decoder.wm.Config.MemoFormat)
 	if err != nil {
 		return err
 	}
@@ -533,18 +534,19 @@ func (decoder *TransactionDecoder) createRawTransaction(wrapper openwallet.Walle
 		return errors.New("Failed to get block height when create summay transaction!")
 	}
 
-	var destinationTag uint64
+	var destinationTag int64
 	tagStr := rawTx.GetExtParam().Get("memo").String()
 	if tagStr == "" {
-		destinationTag = 1234
+		destinationTag = -1
 	} else {
-		destinationTag, err = strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
+		tmp, err := strconv.ParseUint(rawTx.GetExtParam().Get("memo").String(), 10, 32)
 		if err != nil {
 			return errors.New("Invalid destination tag, shoul be uint32 number string inn base 10!")
 		}
+		destinationTag = int64(tmp)
 	}
 
-	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromAddr.PublicKey, uint32(destinationTag), sequence, to, convertFromAmount(amountStr), fee, uint32(currentHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, "",decoder.wm.Config.MemoFormat)
+	emptyTrans, hash, err := rippleTransaction.CreateEmptyRawTransactionAndHash(from, fromAddr.PublicKey, int32(destinationTag), sequence, to, convertFromAmount(amountStr), fee, uint32(currentHeight)+uint32(decoder.wm.Config.LastLedgerSequenceNumber),decoder.wm.Config.MemoType, "",decoder.wm.Config.MemoFormat)
 
 	if err != nil {
 		return err
