@@ -791,6 +791,7 @@ func (bs *XRPBlockScanner) newExtractDataNotify(height uint64, extractData map[s
 	return nil
 }
 
+
 //DeleteUnscanRecordNotFindTX 删除未没有找到交易记录的重扫记录
 func (bs *XRPBlockScanner) DeleteUnscanRecordNotFindTX() error {
 
