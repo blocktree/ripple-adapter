@@ -722,10 +722,11 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 
 			for _, extractData := range result.extractData {
 				status := ""
-				if trx.Status == "success" {
+				if trx.Status == "tesSUCCESS" {
 					status = "1"
 				} else {
 					status = "0"
+					fmt.Println("[XRP:wrong_status] txid-",trx.TxID," status-",trx.Status)
 				}
 				tx := &openwallet.Transaction{
 					From:   []string{trx.From + ":" + convertToAmount(trx.Amount)},

@@ -81,7 +81,7 @@ func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transactio
 		obj.Amount = uint64(amount)
 		obj.To = gjson.Get(json.Raw, "Destination").String()
 	}
-	obj.Status = gjson.Get(json.Raw, "status").String()
+	obj.Status = gjson.Get(json.Raw, "meta").Get("TransactionResult").String()
 	obj.DestinationTag = gjson.Get(json.Raw, "DestinationTag").String()
 	return obj
 }
@@ -105,9 +105,10 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 		obj.To = gjson.Get(json.Raw, "Destination").String()
 	}
 
-	if gjson.Get(json.Raw, "meta").Get("TransactionResult").String() == "tesSUCCESS" {
-		obj.Status = "success"
-	}
+	//if gjson.Get(json.Raw, "meta").Get("TransactionResult").String() == "tesSUCCESS" {
+	//	obj.Status = "success"
+	//}
+	obj.Status = gjson.Get(json.Raw, "meta").Get("TransactionResult").String()
 
 	obj.DestinationTag = gjson.Get(json.Raw, "DestinationTag").String()
 	return obj
@@ -128,9 +129,10 @@ func NewTransaction(json  *gjson.Result) *Transaction {
 		obj.Amount = uint64(amount)
 		obj.To = json.Get("tx_json").Get("Destination").String()
 	}
-	if json.Get( "metadata").Get("TransactionResult").String() == "tesSUCCESS" {
-		obj.Status = "success"
-	}
+	//if json.Get( "metadata").Get("TransactionResult").String() == "tesSUCCESS" {
+	//	obj.Status = "success"
+	//}
+	obj.Status = json.Get( "metadata").Get("TransactionResult").String()
 	return obj
 }
 
