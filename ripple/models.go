@@ -109,6 +109,9 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 	//	obj.Status = "success"
 	//}
 	obj.Status = gjson.Get(json.Raw, "meta").Get("TransactionResult").String()
+	if obj.Status != "tesSUCCESS" {
+		fmt.Println("[XRP:wrong_status] tx-",json.String())
+	}
 
 	obj.DestinationTag = gjson.Get(json.Raw, "DestinationTag").String()
 	return obj

@@ -62,7 +62,7 @@ func (c *WSClient) getBlockHeight() (uint64, error) {
 		return 0, errors.New(resp.Get("error").String())
 	}
 
-	return resp.Get("result").Get("ledger").Get("ledger_index").Uint(), nil
+	return resp.Get("result").Get("ledger").Get("ledger_index").Uint() - 1, nil
 }
 
 func (c *WSClient) getBlockHash(height uint64) (string, error) {
