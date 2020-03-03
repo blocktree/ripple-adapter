@@ -88,6 +88,36 @@ func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transactio
 
 
 func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transaction {
+	if gjson.Get(json.Raw, "TransactionType").String() != "Payment" {
+		return &Transaction{}
+	}
+	for count := 0; count <= 10; count ++ {
+		if gjson.Get(json.Raw, "meta").Get("TransactionResult").String() == "" {
+			time.Sleep(500 * time.Millisecond)
+			request := map[string]interface{}{
+				"transaction": gjson.Get(json.Raw, "hash").String(),
+				"binary":      false,
+			}
+			resp, err := c.Call("tx", request)
+			if err != nil {
+				continue
+			}
+
+			if resp.Get("error").String() != "" {
+				continue
+			}
+
+			if resp.Get("result").Get("meta").Get("TransactionResult").String() == "" {
+				continue
+			}
+
+			tx := resp.Get("result")
+			json = &tx
+			break
+		}
+	}
+
+
 	obj := &Transaction{}
 	obj.TxType = gjson.Get(json.Raw, "TransactionType").String()
 	obj.TxID = gjson.Get(json.Raw, "hash").String()
@@ -109,9 +139,9 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 	//	obj.Status = "success"
 	//}
 	obj.Status = gjson.Get(json.Raw, "meta").Get("TransactionResult").String()
-	if obj.Status != "tesSUCCESS" {
-		fmt.Println("[XRP:wrong_status] tx-",json.String())
-	}
+	//if obj.Status != "tesSUCCESS" {
+	//	fmt.Println("[XRP:wrong_status] tx-",json.String())
+	//}
 
 	obj.DestinationTag = gjson.Get(json.Raw, "DestinationTag").String()
 	return obj
