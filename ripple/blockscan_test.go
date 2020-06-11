@@ -17,12 +17,10 @@ package ripple
 
 import (
 	"fmt"
-	"path/filepath"
 	"testing"
 
-	"github.com/asdine/storm"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/v2/log"
+	"github.com/blocktree/openwallet/v2/v2/openwallet"
 	"github.com/pborman/uuid"
 )
 
@@ -52,11 +50,11 @@ func TestGetBlockHeight(t *testing.T) {
 	t.Logf("GetBlockHeight height = %d \n", height)
 }
 
-func TestGetLocalNewBlock(t *testing.T) {
-	height, hash, _ := tw.GetLocalNewBlock()
-	t.Logf("GetLocalBlockHeight height = %d \n", height)
-	t.Logf("GetLocalBlockHeight hash = %v \n", hash)
-}
+//func TestGetLocalNewBlock(t *testing.T) {
+//	height, hash, _ := tw.GetLocalNewBlock()
+//	t.Logf("GetLocalBlockHeight height = %d \n", height)
+//	t.Logf("GetLocalBlockHeight hash = %v \n", hash)
+//}
 
 // func TestSaveLocalBlockHeight(t *testing.T) {
 // 	bs := NewONTBlockScanner(tw)
@@ -225,17 +223,17 @@ func TestWallet_GetRecharges(t *testing.T) {
 //	bs.DropRechargeRecords(accountID)
 //}
 
-func TestGetUnscanRecords(t *testing.T) {
-	list, err := tw.GetUnscanRecords()
-	if err != nil {
-		t.Errorf("GetUnscanRecords failed unexpected error: %v\n", err)
-		return
-	}
-
-	for _, r := range list {
-		t.Logf("GetUnscanRecords unscan: %v", r)
-	}
-}
+//func TestGetUnscanRecords(t *testing.T) {
+//	list, err := tw.GetUnscanRecords()
+//	if err != nil {
+//		t.Errorf("GetUnscanRecords failed unexpected error: %v\n", err)
+//		return
+//	}
+//
+//	for _, r := range list {
+//		t.Logf("GetUnscanRecords unscan: %v", r)
+//	}
+//}
 
 // func TestONTBlockScanner_RescanFailedRecord(t *testing.T) {
 // 	bs := NewONTBlockScanner(tw)
@@ -267,21 +265,21 @@ func TestONTBlockScanner_GetTransactionsByAddress(t *testing.T) {
 
 }
 
-func TestGetLocalBlock(t *testing.T) {
-	db, err := storm.Open(filepath.Join(tw.Config.dbPath, tw.Config.BlockchainFile))
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	var blocks []*Block
-	err = db.All(&blocks)
-	if err != nil {
-		log.Error("no find")
-		return
-	}
-	log.Info("blocks = ", len(blocks))
-}
+//func TestGetLocalBlock(t *testing.T) {
+//	db, err := storm.Open(filepath.Join(tw.Config.dbPath, tw.Config.BlockchainFile))
+//	if err != nil {
+//		return
+//	}
+//	defer db.Close()
+//
+//	var blocks []*Block
+//	err = db.All(&blocks)
+//	if err != nil {
+//		log.Error("no find")
+//		return
+//	}
+//	log.Info("blocks = ", len(blocks))
+//}
 
 func Test_GetTransaction(t *testing.T) {
 	txid := "dc55118ac9442af38a0ec85bcce54a8f8d68ba65de0120a8739d90b9d93b6ca2"

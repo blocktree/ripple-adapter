@@ -19,21 +19,21 @@ import (
 	"errors"
 	"path/filepath"
 
-	"github.com/blocktree/openwallet/hdkeystore"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/hdkeystore"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openwallet"
 )
 
 type WalletManager struct {
 	openwallet.AssetsAdapterBase
 
-	Storage *hdkeystore.HDKeystore //秘钥存取
-	Client  *Client                // rpc API
-	WSClient *WSClient             // API API
+	Storage         *hdkeystore.HDKeystore        //秘钥存取
+	Client          *Client                       // rpc API
+	WSClient        *WSClient                     // API API
 	Config          *WalletConfig                 //钱包管理配置
 	WalletsInSum    map[string]*openwallet.Wallet //参与汇总的钱包
-	Blockscanner    *XRPBlockScanner             //区块扫描器
-	Decoder         openwallet.AddressDecoder     //地址编码器
+	Blockscanner    *XRPBlockScanner              //区块扫描器
+	Decoder         *AddressDecoderV2     //地址编码器
 	TxDecoder       openwallet.TransactionDecoder //交易单编码器
 	Log             *log.OWLogger                 //日志工具
 	ContractDecoder *ContractDecoder              //智能合约解析器
@@ -48,7 +48,7 @@ func NewWalletManager() *WalletManager {
 	wm.WalletsInSum = make(map[string]*openwallet.Wallet)
 	//区块扫描器
 	wm.Blockscanner = NewXRPBlockScanner(&wm)
-	wm.Decoder = NewAddressDecoder(&wm)
+	wm.Decoder = NewAddressDecoderV2(&wm)
 	wm.TxDecoder = NewTransactionDecoder(&wm)
 	wm.Log = log.NewOWLogger(wm.Symbol())
 	wm.ContractDecoder = NewContractDecoder(&wm)
@@ -101,14 +101,14 @@ func (wm *WalletManager) SendRawTransaction(txHex string) (string, error) {
 func (wm *WalletManager) sendRawTransactionByNode(txHex string) (string, error) {
 	var (
 		txid string
-		err error
+		err  error
 	)
 	if wm.Config.APIChoose == "rpc" {
 		txid, err = wm.Client.sendTransaction(txHex)
 	} else if wm.Config.APIChoose == "ws" {
 		txid, err = wm.WSClient.sendTransaction(txHex)
-	}else {
-		return "",errors.New("Invalid config, check the ini file!")
+	} else {
+		return "", errors.New("Invalid config, check the ini file!")
 	}
 
 	if err != nil {

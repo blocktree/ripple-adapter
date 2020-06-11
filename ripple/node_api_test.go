@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	//testNodeAPI = "http://47.244.179.69:20027"
-	testNodeAPI = "http://47.244.179.69:20029"
+
+	testNodeAPI = "https://"
 )
 
 func Test_getBlockHeight(t *testing.T) {
@@ -31,7 +31,7 @@ func Test_getBlockHeight(t *testing.T) {
 func Test_getBlockByHeight(t *testing.T) {
 
 	c := NewClient(testNodeAPI, true)
-	r, err := c.getBlockByHeight(48169056)
+	r, err := c.getBlockByHeight(55172763)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -99,7 +99,7 @@ func Test_getTransaction(t *testing.T) {
 	c := NewClient(testNodeAPI, true)
 	//txid := "852C8C41FC914FCBCF2A598FCA82738475ABAB35F5C79014E9C0236E53016521"
 	//txid := "27495DD615B7DA81B2198C849520DD4C2D4722B8F91E4382D779489E7D1CD8B6"
-	txid := "F045152131AE578074AFA1842C93C4817D633B19B66AF6A1679E404C879DFD41"
+	txid := "72BCC9D59F29C9F086C494756F87CD4BB7260C418854816CFAD85D964B12EBCA"
 	r, err := c.getTransaction(txid, "MemoData")
 
 	if err != nil {

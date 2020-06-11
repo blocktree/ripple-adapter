@@ -20,8 +20,8 @@ import (
 	"path/filepath"
 
 	"github.com/astaxie/beego/config"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openwallet"
 )
 
 //初始化配置流程
@@ -129,7 +129,7 @@ func (wm *WalletManager) LoadAssetsConfig(c config.Configer) error {
 	wm.Config.APIChoose = c.String("apiChoose")
 	if wm.Config.APIChoose == "rpc" {
 		wm.Client = NewClient(wm.Config.NodeAPI, false)
-	}else if wm.Config.APIChoose == "ws" {
+	} else if wm.Config.APIChoose == "ws" {
 		wm.WSClient = NewWSClient(wm, wm.Config.WSAPI, 0, false)
 	}
 

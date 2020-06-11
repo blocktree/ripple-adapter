@@ -18,9 +18,9 @@ package openwtester
 import (
 	"testing"
 
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openw"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openw"
+	"github.com/blocktree/openwallet/v2/openwallet"
 )
 
 func testGetAssetsAccountBalance(tm *openw.WalletManager, walletID, accountID string) {
@@ -49,7 +49,7 @@ func testCreateTransactionStep(tm *openw.WalletManager, walletID, accountID, to,
 	//	return nil, err
 	//}
 
-	rawTx, err := tm.CreateTransaction(testApp, walletID, accountID, amount, to, feeRate, "test", contract)
+	rawTx, err := tm.CreateTransaction(testApp, walletID, accountID, amount, to, feeRate, "3476353199", contract)
 
 	if err != nil {
 		log.Error("CreateTransaction failed, unexpected error:", err)
@@ -128,6 +128,7 @@ wallet : WKjQEx8W6dmEx4nmzoE1utQoZeq4HC5fSZ
 account : 9KKHEYZMFQJivQKkwCRTzPuQxUK2Arp71HRVP6zxK7Sj
 1 address : rPASzbJFtmfExwtP4yb52GhckPKWHuAyiT
 */
+
 func TestTransfer(t *testing.T) {
 	tm := testInitWalletManager()
 	walletID := "WKjQEx8W6dmEx4nmzoE1utQoZeq4HC5fSZ"
@@ -158,28 +159,28 @@ func TestTransfer(t *testing.T) {
 		return
 	}
 
-	to = "rnsa2e5jHVmUKbTBEmysZP2KLK54ekBkkR"
-	rawTx, err = testCreateTransactionStep(tm, walletID, accountID, to, "1.000012", "", nil)
-	if err != nil {
-		return
-	}
-
-	log.Std.Info("rawTx: %+v", rawTx)
-
-	_, err = testSignTransactionStep(tm, rawTx)
-	if err != nil {
-		return
-	}
-
-	_, err = testVerifyTransactionStep(tm, rawTx)
-	if err != nil {
-		return
-	}
-
-	_, err = testSubmitTransactionStep(tm, rawTx)
-	if err != nil {
-		return
-	}
+	//to = "rnsa2e5jHVmUKbTBEmysZP2KLK54ekBkkR"
+	//rawTx, err = testCreateTransactionStep(tm, walletID, accountID, to, "1.000012", "", nil)
+	//if err != nil {
+	//	return
+	//}
+	//
+	//log.Std.Info("rawTx: %+v", rawTx)
+	//
+	//_, err = testSignTransactionStep(tm, rawTx)
+	//if err != nil {
+	//	return
+	//}
+	//
+	//_, err = testVerifyTransactionStep(tm, rawTx)
+	//if err != nil {
+	//	return
+	//}
+	//
+	//_, err = testSubmitTransactionStep(tm, rawTx)
+	//if err != nil {
+	//	return
+	//}
 
 }
 

@@ -5,8 +5,7 @@ import (
 	"testing"
 )
 
-//var origin = "http://"
-var wsurl = ":"
+var wsurl = "ws://"
 
 //
 //func Test_ws(t *testing.T){
@@ -67,7 +66,7 @@ func Test_ws_getBlockHeight(t *testing.T){
 
 func Test_ws_gwtBlockHash(t *testing.T) {
 	//c := NewWSClient(wsurl, 0, true)
-	height := uint64(48551264)
+	height := uint64(55308500)
 	hash, err := tw.WSClient.getBlockHash(height)
 	if err != nil {
 		t.Error(err)
@@ -172,8 +171,8 @@ func Test_ws_isActived(t *testing.T){
 }
 
 func Test_ws_getBlockByHeight(t *testing.T) {
-	c := tw.WSClient
-	r, err := c.getBlockByHeight(48554232)
+	c := tw.WSClient //53846970
+	r, err := c.getBlockByHeight(54316774)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -182,11 +181,31 @@ func Test_ws_getBlockByHeight(t *testing.T) {
 }
 
 
+func Test_ws_getBlockByHeight1(t *testing.T) {
+	c := tw.WSClient
+	height := uint64(53871523)
+	for {
+
+		r, err := c.getBlockByHeight(height)
+		fmt.Println("height : ", height)
+		if err != nil {
+
+			fmt.Println(err)
+		} else {
+			fmt.Println(r)
+		}
+
+		height ++
+	}
+
+}
+
+
 
 func Test_ws_getTransaction(t *testing.T) {
 
 	c := tw.WSClient
-	txid := "7B5CE804B39DAD4F1EAF0BC147923B68E12E91D2C9A8F3F0E370848B6E7675E9"
+	txid := "0DEEF90B1502FCB8113192EA5A6472B34EE4EF6E41BDD76C3128E2B44790AD42"
 	r, err := c.getTransaction(txid, "MemoData")
 
 	if err != nil {
@@ -195,59 +214,15 @@ func Test_ws_getTransaction(t *testing.T) {
 		fmt.Println(r)
 	}
 
-	r, err = c.getTransaction(txid, "MemoData")
+	height := uint64(53354806)
 
+	r, err = c.getTransactionWithHeight(txid, height)
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println(r)
 	}
 
-	r, err = c.getTransaction(txid, "MemoData")
-
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(r)
-	}
-
-	r, err = c.getTransaction(txid, "MemoData")
-
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(r)
-	}
-	for i := 0 ;i<100 ; i ++ {
-		r, err = c.getTransaction(txid, "MemoData")
-
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println(r)
-		}
-	}
-
-
-	// txid = "1b0147a6b5660215e9a37ca34fe9a6298988e45f7eefbd8c4b98993f4e762c3e" //"9KBoALfTjvZLJ6CAuJCGyzRA1aWduiNFMvbqTchfBVpF"
-
-	// r, err = c.getTransaction(txid)
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// } else {
-	// 	fmt.Println(r)
-	// }
-
-	// txid = "3ca0888b232df90d910a921d2f4004bb61a80bbbe27caee7107de282576e38a0" //"9KBoALfTjvZLJ6CAuJCGyzRA1aWduiNFMvbqTchfBVpF"
-
-	// r, err = c.getTransaction(txid)
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// } else {
-	// 	fmt.Println(r)
-	// }
 }
 
 
