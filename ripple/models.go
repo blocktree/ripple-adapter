@@ -127,7 +127,7 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 	if obj.BlockHeight != 0 {
 		obj.BlockHash, _ = c.getBlockHash(obj.BlockHeight)
 	}
-	amount, err := strconv.ParseInt(gjson.Get(json.Raw, "Amount").String(), 10, 64)
+	amount, err := strconv.ParseInt(gjson.Get(json.Raw, "meta").Get("delivered_amount").String(), 10, 64)
 	if err == nil {
 		obj.Amount = uint64(amount)
 		obj.To = gjson.Get(json.Raw, "Destination").String()
