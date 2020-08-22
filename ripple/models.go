@@ -113,6 +113,8 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 			tx := resp.Get("result")
 			json = &tx
 			break
+		} else {
+			break
 		}
 	}
 
