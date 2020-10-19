@@ -133,6 +133,8 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 	if err == nil {
 		obj.Amount = uint64(amount)
 		obj.To = gjson.Get(json.Raw, "Destination").String()
+	} else {
+		fmt.Println("[ripple_scanner_debug] : " + json.Raw)
 	}
 
 	//if gjson.Get(json.Raw, "meta").Get("TransactionResult").String() == "tesSUCCESS" {
