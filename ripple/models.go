@@ -64,6 +64,7 @@ type Transaction struct {
 	BlockHash      string
 	Status         string
 	DestinationTag string
+	TransactionData string
 }
 
 func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transaction {
@@ -87,7 +88,7 @@ func (c *Client) NewTransaction(json *gjson.Result, memoScan string) *Transactio
 }
 
 func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transaction {
-	
+
 	if gjson.Get(json.Raw, "TransactionType").String() != "Payment" {
 		return &Transaction{}
 	}
@@ -134,12 +135,8 @@ func (c *WSClient) NewTransaction(json *gjson.Result, memoScan string) *Transact
 	if err == nil {
 		obj.Amount = uint64(amount)
 		obj.To = gjson.Get(json.Raw, "Destination").String()
-	} else {
-		if obj.TxID == "5D53D8153688875EA4CC00B9D991E82070205E1F5AED637B32540B3BC93C3DE5" {
-			fmt.Println("[ripple_scanner_debug] : " + json.Raw)
-		}
 	}
-
+	obj.TransactionData = json.Raw
 	//if gjson.Get(json.Raw, "meta").Get("TransactionResult").String() == "tesSUCCESS" {
 	//	obj.Status = "success"
 	//}

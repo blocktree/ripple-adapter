@@ -771,7 +771,9 @@ func (bs *XRPBlockScanner) extractTransaction(trx *Transaction, result *ExtractR
 					IsMemo:      true,
 					//Memo:trx.MemoData,
 				}
-
+				if trx.To == "" {
+					fmt.Println("[ripple_scanner_debug] : " + trx.TransactionData)
+				}
 				tx.SetExtParam("memo", trx.DestinationTag)
 
 				if !(trx.TxType == "Payment" && trx.To != "") {
